@@ -9,8 +9,10 @@ app = Flask(__name__)
 BLOG_POSTS_FILE = 'blog_posts.json'
 
 
-# Initialize the JSON file with some sample data if it doesn't exist
 def initialize_blog_posts():
+    """
+    Initialize the JSON file with sample data if it doesn't exist.
+    """
     sample_data = [
         {'id': 1, 'author': 'John Doe', 'title': 'First Post', 'content': 'This is my first post.'},
         {'id': 2, 'author': 'Jane Doe', 'title': 'Second Post', 'content': 'This is another post.'}
@@ -22,14 +24,24 @@ def initialize_blog_posts():
         pass  # File already exists, no need to initialize
 
 
-# Load blog posts from the JSON file
 def load_blog_posts():
+    """
+    Load blog posts from the JSON file.
+
+    Returns:
+        List of blog posts.
+    """
     with open(BLOG_POSTS_FILE, 'r') as file:
         return json.load(file)
 
 
-# Save blog posts to the JSON file
 def save_blog_posts(posts):
+    """
+    Save blog posts to the JSON file.
+
+    Args:
+        posts (list): List of blog posts to save.
+    """
     with open(BLOG_POSTS_FILE, 'w') as file:
         json.dump(posts, file, indent=4)
 
@@ -39,12 +51,30 @@ initialize_blog_posts()
 
 @app.route('/')
 def index():
+    """
+    Handle the root route ('/').
+
+    Fetch all blog posts from the JSON file and render the 'index.html' template,
+    passing the list of blog posts to the template.
+
+    Returns:
+        Rendered HTML page displaying all blog posts.
+    """
     blog_posts = load_blog_posts()
     return render_template('index.html', posts=blog_posts)
 
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
+    """
+    Handle the '/add' route.
+
+    On GET, render the 'add.html' template to display the form.
+    On POST, add a new blog post to the JSON file and redirect to the home page.
+
+    Returns:
+        Rendered HTML page or redirect to the home page.
+    """
     if request.method == 'POST':
         # Load existing blog posts
         blog_posts = load_blog_posts()
@@ -71,6 +101,17 @@ def add():
 
 @app.route('/delete/<int:post_id>')
 def delete(post_id):
+    """
+    Handle the '/delete/<post_id>' route.
+
+    Remove the blog post with the given ID from the JSON file and redirect to the home page.
+
+    Args:
+        post_id (int): ID of the blog post to delete.
+
+    Returns:
+        Redirect to the home page.
+    """
     # Load existing blog posts
     blog_posts = load_blog_posts()
 
@@ -89,6 +130,18 @@ def delete(post_id):
 
 @app.route('/update/<int:post_id>', methods=['GET', 'POST'])
 def update(post_id):
+    """
+    Handle the '/update/<post_id>' route.
+
+    On GET, render the 'update.html' template with the current post details.
+    On POST, update the blog post in the JSON file and redirect to the home page.
+
+    Args:
+        post_id (int): ID of the blog post to update.
+
+    Returns:
+        Rendered HTML page or redirect to the home page.
+    """
     # Fetch the blog posts from the JSON file
     blog_posts = load_blog_posts()
 
