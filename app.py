@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 import json
 
 
@@ -41,6 +41,32 @@ initialize_blog_posts()
 def index():
     blog_posts = load_blog_posts()
     return render_template('index.html', posts=blog_posts)
+
+
+@app.route('/add', methods=['GET', 'POST'])
+def add():
+    if request.method == 'POST':
+        # Load existing blog posts
+        blog_posts = load_blog_posts()
+
+        # Create a new blog post with a unique ID
+        new_post = {
+            'id': len(blog_posts) + 1,  # Generate a unique ID
+            'author': request.form.get('author'),
+            'title': request.form.get('title'),
+            'content': request.form.get('content')
+        }
+
+        # Append the new post to the list
+        blog_posts.append(new_post)
+
+        # Save the updated list back to the JSON file
+        save_blog_posts(blog_posts)
+
+        # Redirect to the home page
+        return redirect(url_for('index'))
+
+    return render_template('add.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
