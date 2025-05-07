@@ -45,9 +45,6 @@ def save_blog_posts(posts):
     with open(BLOG_POSTS_FILE, 'w') as file:
         json.dump(posts, file, indent=4)
 
-# Initialize the blog posts file
-initialize_blog_posts()
-
 
 @app.route('/')
 def index():
@@ -177,5 +174,16 @@ def update(post_id):
     return render_template('update.html', post=post)
 
 
-if __name__ == '__main__':
+def main():
+    """
+    Main function to initialize the application and run the Flask server.
+    """
+    # Initialize the blog posts file
+    initialize_blog_posts()
+
+    # Run the Flask application
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+if __name__ == '__main__':
+    main()
