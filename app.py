@@ -115,11 +115,15 @@ def delete(post_id):
     # Load existing blog posts
     blog_posts = load_blog_posts()
 
-    # Filter out the post with the given ID
+    # Find and remove the post with the given ID
     updated_posts = []
     for post in blog_posts:
         if post['id'] != post_id:
             updated_posts.append(post)
+
+    # Reassign unique IDs to ensure no conflicts
+    for index, post in enumerate(updated_posts, start=1):
+        post['id'] = index
 
     # Save the updated list back to the JSON file
     save_blog_posts(updated_posts)
